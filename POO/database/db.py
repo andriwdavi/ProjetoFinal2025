@@ -19,7 +19,7 @@ class Database:
                 idade INTEGER NOT NULL,
                 genero TEXT NOT NULL,
                 email TEXT NOT NULL,
-                senha TEXT NOT NULL
+                senha TEXT NOT NULL,
                 tipo INTEGER
             )
         """)

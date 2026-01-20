@@ -12,7 +12,8 @@ class UsuarioDAO:
         cursor.execute("""
             INSERT INTO usuarios (nome, idade, genero, email, senha, tipo)
             VALUES (?, ?, ?, ?, ?, ?)
-        """ (
+        """,
+        (
             usuario.nome,
             usuario.idade,
             usuario.genero,
@@ -26,7 +27,7 @@ class UsuarioDAO:
         conn.commit()
         conn.close()
 
-        def buscar_por_id(self, id: int) -> Usuario | None:
+    def buscar_por_id(self, id: int) -> Usuario | None:
             conn = sqlite3.connect(self.db_name)
             cursor = conn.cursor()
 
@@ -49,5 +50,34 @@ class UsuarioDAO:
                     senha=resultado[5],
                     tipo=resultado[6]
                 )
-            
+    
             return None
+
+    def buscar_por_email(self, email: str) -> Usuario | None:
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT id, nome, idade, genero, email, senha, tipo
+            FROM usuarios
+            WHERE email = ?
+            """,
+            (email,)
+        )
+
+        resultado = cursor.fetchone()
+        conn.close()
+
+        if resultado:
+            return Usuario(
+                id=resultado[0],
+                nome=resultado[1],
+                idade=resultado[2],
+                genero=resultado[3],
+                email=resultado[4],
+                senha=resultado[5],
+                tipo=resultado[6]
+            )
+
+        return None
