@@ -6,7 +6,7 @@ class Unidade:
         self.set_faixa_etaria(faixa_etaria)
         self.set_genero(genero)
 
-    
+    # ID
     def get_id(self):
         return self._id
 
@@ -16,7 +16,7 @@ class Unidade:
         else:
             raise ValueError("ID deve ser positivo")
 
-
+    # Nome
     def get_nome(self):
         return self._nome
 
@@ -26,17 +26,19 @@ class Unidade:
         else:
             raise ValueError("Nome da unidade deve ter pelo menos 3 caracteres")
 
-
+    # Faixa etária
     def get_faixa_etaria(self):
         return self._faixa_etaria
 
     def set_faixa_etaria(self, faixa_etaria):
-        if faixa_etaria:
+        # Aceita apenas 10, 11, 12, 13, 14 ou 15
+        valores_permitidos = [10, 11, 12, 13, 14, 15]
+        if faixa_etaria in valores_permitidos:
             self._faixa_etaria = faixa_etaria
         else:
-            raise ValueError("Faixa etária não pode ser vazia")
+            raise ValueError(f"Faixa etária inválida! Deve ser um dos valores: {valores_permitidos}")
 
-
+    # Gênero
     def get_genero(self):
         return self._genero
 

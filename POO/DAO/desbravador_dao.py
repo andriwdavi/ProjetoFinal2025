@@ -2,7 +2,7 @@ import sqlite3
 from models.desbravador import Desbravador
 
 class DesbravadorDAO:
-    def __init__(self, db_name="app.db"):
+    def __init__(self, db_name="database/app.db"):
         self.db_name = db_name
 
     def salvar(self, d: Desbravador):

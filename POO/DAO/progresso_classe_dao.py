@@ -2,7 +2,7 @@ import sqlite3
 from models.progresso_classe import ProgressoClasse
 
 class ProgressoClasseDAO:
-    def __init__(self, db_name="app.db"):
+    def __init__(self, db_name="database/app.db"):
         self.db_name = db_name
 
     def salvar(self, p: ProgressoClasse):

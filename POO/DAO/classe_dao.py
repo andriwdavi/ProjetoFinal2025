@@ -2,7 +2,7 @@ import sqlite3
 from models.classe import Classe
 
 class ClasseDAO:
-    def __init__(self, db_name="app.db"):
+    def __init__(self, db_name="database/app.db"):
         self.db_name = db_name
 
     def salvar(self, classe: Classe):

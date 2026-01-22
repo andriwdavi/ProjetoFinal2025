@@ -4,13 +4,14 @@ from database.db import Database
 from DAO.usuario_dao import UsuarioDAO
 from models.usuario import Usuario
 
-from pages.login_page import mostrar_login
-from pages.menu_page import mostrar_menu
+from views.login_page import mostrar_login
+from views.menu_page import mostrar_menu
 
 
 st.set_page_config(
     page_title="Sistema",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
 # ==============================
@@ -30,8 +31,8 @@ if not usuario_dao.buscar_por_email("diretor@email.com"):
         idade=35,
         genero="Masculino",
         email="diretor@email.com",
-        senha="diretor123",
-        tipo="ADMIN"
+        senha="1234",
+        tipo=0
     )
     usuario_dao.salvar(diretor)
 

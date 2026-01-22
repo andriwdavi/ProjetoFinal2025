@@ -1,25 +1,34 @@
 import sqlite3
+import os
 
 class Database:
     def __init__(self, db_name="app.db"):
-        self.db_name = db_name
+        # Cria pasta database se não existir
+        if not os.path.exists("database"):
+            os.makedirs("database")
+        self.db_name = os.path.join("database", db_name)
 
     def conectar(self):
+        """Conecta no banco de dados SQLite"""
         return sqlite3.connect(self.db_name)
 
     def criar_tabelas(self):
+        """Cria todas as tabelas do sistema"""
+
         conn = self.conectar()
         cursor = conn.cursor()
 
-        # Tabela UNIDADES
+        # ------------------ UNIDADES ------------------
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS unidades (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL
+                nome TEXT NOT NULL,
+                faixa_etaria INTEGER NOT NULL,
+                genero TEXT NOT NULL
             )
         """)
 
-        # Tabela CLASSES
+        # ------------------ CLASSES ------------------
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS classes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,7 +36,7 @@ class Database:
             )
         """)
 
-        # Tabela USUARIOS
+        # ------------------ USUARIOS ------------------
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS usuarios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +45,7 @@ class Database:
                 genero TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
                 senha TEXT NOT NULL,
-                tipo TEXT NOT NULL,
+                tipo INTEGER NOT NULL,
                 cargo TEXT,
                 unidade_id INTEGER,
                 classe_atual_id INTEGER,
@@ -45,7 +54,7 @@ class Database:
             )
         """)
 
-        # Tabela PROGRESSO_CLASSES
+        # ------------------ PROGRESSO_CLASSES ------------------
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS progresso_classes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
