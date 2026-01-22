@@ -24,16 +24,16 @@ usuario_dao = UsuarioDAO()
 # ==============================
 # Usuário admin padrão (seed)
 # ==============================
-if not usuario_dao.buscar_por_email("admin@email.com"):
-    admin = Usuario(
-        nome="Administrador",
-        idade=30,
+if not usuario_dao.buscar_por_email("diretor@email.com"):
+    diretor = Usuario(
+        nome="Diretor",
+        idade=35,
         genero="Masculino",
-        email="admin@email.com",
-        senha="1234",
-        tipo=1
+        email="diretor@email.com",
+        senha="diretor123",
+        tipo="ADMIN"
     )
-    usuario_dao.salvar(admin)
+    usuario_dao.salvar(diretor)
 
 # ==============================
 # Controle de sessão

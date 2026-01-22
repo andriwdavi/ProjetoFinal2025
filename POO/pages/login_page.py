@@ -11,7 +11,7 @@ def mostrar_login():
         dao = UsuarioDAO()
         usuario = dao.buscar_por_email(email)
 
-        if usuario and usuario.senha == senha:
+        if usuario and usuario.get_senha() == senha:
             st.session_state["usuario"] = usuario
             st.success("Login realizado com sucesso!")
             st.rerun()
