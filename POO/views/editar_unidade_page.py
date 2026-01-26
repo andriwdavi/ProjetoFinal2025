@@ -13,7 +13,7 @@ def editar_unidade():
         st.info("Nenhuma unidade cadastrada.")
         return
 
-    # Mapeia unidades para o selectbox
+
     mapa_unidades = {
         f"{u.get_nome()} (ID {u.get_id()})": u
         for u in unidades
@@ -26,7 +26,7 @@ def editar_unidade():
 
     unidade = mapa_unidades[unidade_selecionada_label]
 
-    # --- CAMPOS ---
+
     novo_nome = st.text_input(
         "Nome da unidade",
         value=unidade.get_nome()
@@ -41,7 +41,6 @@ def editar_unidade():
 
     generos = ["M", "F", "MISTO"]
 
-    # 🔥 AQUI ESTÁ O FIX DO ERRO
     genero_atual = unidade.get_genero().upper()
     if genero_atual not in generos:
         genero_atual = "MISTO"
@@ -52,7 +51,7 @@ def editar_unidade():
         index=generos.index(genero_atual)
     )
 
-    # --- BOTÃO ---
+
     if st.button("💾 Salvar alterações"):
         try:
             unidade.set_nome(novo_nome)
