@@ -118,3 +118,35 @@ class UnidadeDAO:
 
         conn.close()
         return resultado
+    
+    def excluir(self, unidade_id: int):
+        conn = self.conectar()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "DELETE FROM unidades WHERE id = ?",
+            (unidade_id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+    def atualizar(self, unidade):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE unidades
+            SET nome = ?, faixa_etaria = ?, genero = ?
+            WHERE id = ?
+        """, (
+            unidade.get_nome(),
+            unidade.get_faixa_etaria(),
+            unidade.get_genero(),
+            unidade.get_id()
+        ))
+
+        conn.commit()
+        conn.close()
+
+

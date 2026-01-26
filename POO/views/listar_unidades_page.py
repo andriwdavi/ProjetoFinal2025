@@ -2,28 +2,30 @@ import streamlit as st
 from DAO.unidade_dao import UnidadeDAO
 
 def listar_unidades():
-    st.title("📋 Lista de Unidades")
+    st.title("📋 Unidades")
+
+    usuario = st.session_state["usuario"]
 
     dao = UnidadeDAO()
-    dao.criar_tabela()  # garante que a tabela de unidades exista
-
-    unidades = dao.listar_unidades_com_desbravadores()
+    unidades = dao.listar_todas()
 
     if not unidades:
-        st.warning("Nenhuma unidade cadastrada ainda.")
+        st.warning("Nenhuma unidade cadastrada.")
         return
 
-    for item in unidades:
-        unidade = item["unidade"]
-        desbravadores = item["desbravadores"]
+    for unidade in unidades:
+        col1, col2 = st.columns([4, 1])
 
-        st.subheader(f"🏕 Unidade: {unidade.get_nome()} ({unidade.get_faixa_etaria()} anos, {unidade.get_genero()})")
+        with col1:
+            st.write(
+                f"🏕 **{unidade.get_nome()}** | "
+                f"Faixa etária: {unidade.get_faixa_etaria()} | "
+                f"Gênero: {unidade.get_genero()}"
+            )
 
-        if desbravadores:
-            st.write("👥 Desbravadores inscritos:")
-            for d in desbravadores:
-                st.write(f"- {d.get_nome()} | {d.get_idade()} anos | {d.get_email()}")
-        else:
-            st.write("Nenhum desbravador inscrito nesta unidade.")
-
-        st.divider()
+        with col2:
+            if usuario.get_tipo() == "ADMIN":
+                if st.button("❌ Excluir", key=f"del_unidade_{unidade.get_id()}"):
+                    dao.excluir(unidade.get_id())
+                    st.success("Unidade excluída com sucesso!")
+                    st.rerun()

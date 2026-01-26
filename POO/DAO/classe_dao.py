@@ -5,8 +5,25 @@ class ClasseDAO:
     def __init__(self, db_name="database/app.db"):
         self.db_name = db_name
 
+    def conectar(self):
+        return sqlite3.connect(self.db_name)
+
+    def criar_tabela(self):
+        conn = self.conectar()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS classes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL UNIQUE
+            )
+        """)
+
+        conn.commit()
+        conn.close()
+
     def salvar(self, classe: Classe):
-        conn = sqlite3.connect(self.db_name)
+        conn = self.conectar()
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -19,17 +36,16 @@ class ClasseDAO:
         conn.commit()
         conn.close()
 
-    def buscar_por_id(self, id: int):
-        conn = sqlite3.connect(self.db_name)
+    def listar_todas(self):
+        conn = self.conectar()
         cursor = conn.cursor()
 
-        cursor.execute("""
-            SELECT id, nome FROM classes WHERE id = ?
-        """, (id,))
-
-        row = cursor.fetchone()
+        cursor.execute("SELECT id, nome FROM classes")
+        rows = cursor.fetchall()
         conn.close()
 
-        if row:
-            return Classe(id=row[0], nome=row[1])
-        return None
+        classes = []
+        for r in rows:
+            classes.append(Classe(id=r[0], nome=r[1]))
+
+        return classes

@@ -2,6 +2,11 @@ import streamlit as st
 from views.criar_unidade_page import criar_unidade
 from views.inscrever_dbv_page import inscrever_dbv
 from views.listar_unidades_page import listar_unidades
+from views.listar_desbravadores_page import listar_desbravadores
+from views.editar_desbravador_page import editar_desbravador
+from views.editar_unidade_page import editar_unidade
+
+
 
 def mostrar_menu():
     """
@@ -23,13 +28,16 @@ def mostrar_menu():
     st.divider()
 
     # Define opções disponíveis dependendo do tipo
-    opcoes = ["Início", "Meus Dados", "Listar Unidades", "Logout"]
+    opcoes = ["Início", "Meus Dados", "Listar Unidades", "Listar Desbravadores", "Logout"]
 
     if usuario.get_tipo() == "ADMIN":
-        opcoes.insert(1, "Criar Unidade")
-        opcoes.insert(2, "Inscrever Desbravador")
+        opcoes.insert(3, "Criar Unidade")
+        opcoes.insert(4, "Editar Unidade")
+        opcoes.insert(5, "Inscrever Desbravador")
+        opcoes.insert(6, "Editar Desbravador")
     elif usuario.get_tipo() == "CONSELHEIRO":
-        opcoes.insert(1, "Inscrever Desbravador")
+        opcoes.insert(4, "Inscrever Desbravador")
+        opcoes.insert(5, "Editar Desbravador")
 
     # Selectbox para escolher operação
     opcao = st.selectbox("Selecione uma opção:", opcoes)
@@ -53,6 +61,17 @@ def mostrar_menu():
 
     elif opcao == "Listar Unidades":
         listar_unidades()
+
+    elif opcao == "Listar Desbravadores":
+        listar_desbravadores()
+
+    elif opcao == "Editar Desbravador":
+        editar_desbravador()
+
+    elif opcao == "Editar Unidade":
+        editar_unidade()
+
+
 
     elif opcao == "Logout":
         st.session_state.clear()
