@@ -3,7 +3,6 @@ import os
 
 class Database:
     def __init__(self, db_name="app.db"):
-        # Cria pasta database se não existir
         if not os.path.exists("database"):
             os.makedirs("database")
         self.db_name = os.path.join("database", db_name)

@@ -14,17 +14,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ==============================
-# Inicialização do banco
-# ==============================
 db = Database()
 db.criar_tabelas()
 
 usuario_dao = UsuarioDAO()
 
-# ==============================
-# Usuário admin padrão (seed)
-# ==============================
 if not usuario_dao.buscar_por_email("diretor@email.com"):
     diretor = Usuario(
         nome="Diretor",
@@ -36,9 +30,6 @@ if not usuario_dao.buscar_por_email("diretor@email.com"):
     )
     usuario_dao.salvar(diretor)
 
-# ==============================
-# Controle de sessão
-# ==============================
 if "usuario" not in st.session_state:
     mostrar_login()
 else:

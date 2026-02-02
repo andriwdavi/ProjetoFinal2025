@@ -38,7 +38,7 @@ def criar_unidade():
 
             # Salva no banco
             dao = UnidadeDAO()
-            dao.criar_tabela()  # garante que a tabela exista
+            dao.criar_tabela()  
             dao.salvar(unidade)
 
             st.success(f"✅ Unidade '{unidade.get_nome()}' criada com sucesso!")

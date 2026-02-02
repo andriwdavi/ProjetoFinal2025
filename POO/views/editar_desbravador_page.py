@@ -9,7 +9,6 @@ def editar_desbravador():
     usuario_dao = UsuarioDAO()
     unidade_dao = UnidadeDAO()
 
-    # Busca apenas desbravadores
     desbravadores = usuario_dao.listar_desbravadores()
     unidades = unidade_dao.listar_todas()
 
@@ -21,7 +20,6 @@ def editar_desbravador():
         st.warning("Nenhuma unidade cadastrada.")
         return
 
-    # --- SELECT DESBRAVADOR ---
     mapa_desbravadores = {
         f"{d.get_nome()} (ID {d.get_id()})": d
         for d in desbravadores
@@ -34,22 +32,27 @@ def editar_desbravador():
 
     desbravador = mapa_desbravadores[label_desbravador]
 
-    # --- CAMPOS EDITÁVEIS ---
+    genero_atual = desbravador.get_genero()
+
+    if genero_atual == "Masculino":
+        genero_atual = "M"
+    elif genero_atual == "Feminino":
+        genero_atual = "F"
+
     nome = st.text_input("Nome", desbravador.get_nome())
     idade = st.number_input(
         "Idade",
         min_value=10,
-        max_value=18,
+        max_value=15,
         value=desbravador.get_idade()
     )
 
     genero = st.selectbox(
         "Gênero",
         ["M", "F"],
-        index=["M", "F"].index(desbravador.get_genero())
+        index=["M", "F"].index(genero_atual)
     )
 
-    # --- SELECT UNIDADE ---
     mapa_unidades = {
         f"{u.get_nome()} (ID {u.get_id()})": u
         for u in unidades
@@ -71,12 +74,16 @@ def editar_desbravador():
 
     nova_unidade = mapa_unidades[unidade_label]
 
-    # --- BOTÃO SALVAR ---
     if st.button("💾 Salvar alterações"):
         try:
             desbravador.set_nome(nome)
             desbravador.set_idade(idade)
-            desbravador.set_genero(genero)
+
+            if genero == "M":
+                desbravador.set_genero("Masculino")
+            else:
+                desbravador.set_genero("Feminino")
+
             desbravador.set_unidade_id(nova_unidade.get_id())
 
             usuario_dao.atualizar(desbravador)

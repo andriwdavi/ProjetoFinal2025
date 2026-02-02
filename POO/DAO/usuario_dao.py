@@ -1,6 +1,7 @@
 import sqlite3
 from models.usuario import Usuario
 
+
 class UsuarioDAO:
     def __init__(self, db_name="database/app.db"):
         self.db_name = db_name
@@ -8,7 +9,7 @@ class UsuarioDAO:
     def conectar(self):
         return sqlite3.connect(self.db_name)
 
-    # ------------------ Salvar usuário ------------------
+    # ------------------ SALVAR ------------------
     def salvar(self, usuario: Usuario):
         conn = self.conectar()
         cursor = conn.cursor()
@@ -20,7 +21,9 @@ class UsuarioDAO:
         }
 
         cursor.execute("""
-            INSERT INTO usuarios (nome, idade, genero, email, senha, tipo, unidade_id, classe_atual_id)
+            INSERT INTO usuarios (
+                nome, idade, genero, email, senha, tipo, unidade_id, classe_atual_id
+            )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             usuario.get_nome(),
@@ -38,7 +41,7 @@ class UsuarioDAO:
         conn.commit()
         conn.close()
 
-    # ------------------ Buscar por ID ------------------
+    # ------------------ BUSCAR POR ID ------------------
     def buscar_por_id(self, id: int) -> Usuario | None:
         conn = self.conectar()
         cursor = conn.cursor()
@@ -49,28 +52,27 @@ class UsuarioDAO:
             WHERE id = ?
         """, (id,))
 
-        resultado = cursor.fetchone()
+        row = cursor.fetchone()
         conn.close()
 
-        if resultado:
-            tipo_map = {0: "ADMIN", 1: "LIDER", 2: "DESBRAVADOR"}
-            tipo_str = tipo_map.get(resultado[6], "DESBRAVADOR")
+        if not row:
+            return None
 
-            return Usuario(
-                id=resultado[0],
-                nome=resultado[1],
-                idade=resultado[2],
-                genero=resultado[3],
-                email=resultado[4],
-                senha=resultado[5],
-                tipo=tipo_str,
-                unidade_id=resultado[7],
-                classe_atual_id=resultado[8]
-            )
+        tipo_map = {0: "ADMIN", 1: "LIDER", 2: "DESBRAVADOR"}
 
-        return None
+        return Usuario(
+            id=row[0],
+            nome=row[1],
+            idade=row[2],
+            genero=row[3],
+            email=row[4],
+            senha=row[5],
+            tipo=tipo_map[row[6]],
+            unidade_id=row[7],
+            classe_atual_id=row[8]
+        )
 
-    # ------------------ Buscar por email ------------------
+    # ------------------ BUSCAR POR EMAIL ------------------
     def buscar_por_email(self, email: str) -> Usuario | None:
         conn = self.conectar()
         cursor = conn.cursor()
@@ -81,33 +83,33 @@ class UsuarioDAO:
             WHERE email = ?
         """, (email,))
 
-        resultado = cursor.fetchone()
+        row = cursor.fetchone()
         conn.close()
 
-        if resultado:
-            tipo_map = {0: "ADMIN", 1: "LIDER", 2: "DESBRAVADOR"}
-            tipo_str = tipo_map.get(resultado[6], "DESBRAVADOR")
+        if not row:
+            return None
 
-            return Usuario(
-                id=resultado[0],
-                nome=resultado[1],
-                idade=resultado[2],
-                genero=resultado[3],
-                email=resultado[4],
-                senha=resultado[5],
-                tipo=tipo_str,
-                unidade_id=resultado[7],
-                classe_atual_id=resultado[8]
-            )
+        tipo_map = {0: "ADMIN", 1: "LIDER", 2: "DESBRAVADOR"}
 
-        return None
+        return Usuario(
+            id=row[0],
+            nome=row[1],
+            idade=row[2],
+            genero=row[3],
+            email=row[4],
+            senha=row[5],
+            tipo=tipo_map[row[6]],
+            unidade_id=row[7],
+            classe_atual_id=row[8]
+        )
 
+    # ------------------ LISTAR DESBRAVADORES ------------------
     def listar_desbravadores(self):
-        conn = sqlite3.connect(self.db_name)
+        conn = self.conectar()
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT id, nome, idade, genero, email, senha, tipo, unidade_id, classe_atual_id
+            SELECT id, nome, idade, genero, email, senha, unidade_id, classe_atual_id
             FROM usuarios
             WHERE tipo = 2
         """)
@@ -116,6 +118,7 @@ class UsuarioDAO:
         conn.close()
 
         desbravadores = []
+
         for r in rows:
             desbravadores.append(
                 Usuario(
@@ -125,14 +128,17 @@ class UsuarioDAO:
                     genero=r[3],
                     email=r[4],
                     senha=r[5],
-                    tipo="DESBRAVADOR"
+                    tipo="DESBRAVADOR",
+                    unidade_id=r[6],
+                    classe_atual_id=r[7]
                 )
             )
 
         return desbravadores
-    
+
+    # ------------------ ATUALIZAR ------------------
     def atualizar(self, usuario: Usuario):
-        conn = sqlite3.connect(self.db_name)
+        conn = self.conectar()
         cursor = conn.cursor()
 
         tipo_map = {
@@ -143,7 +149,15 @@ class UsuarioDAO:
 
         cursor.execute("""
             UPDATE usuarios
-            SET nome = ?, idade = ?, genero = ?, email = ?, senha = ?, tipo = ?, unidade_id = ?, classe_atual_id = ?
+            SET
+                nome = ?,
+                idade = ?,
+                genero = ?,
+                email = ?,
+                senha = ?,
+                tipo = ?,
+                unidade_id = ?,
+                classe_atual_id = ?
             WHERE id = ?
         """, (
             usuario.get_nome(),
@@ -152,16 +166,17 @@ class UsuarioDAO:
             usuario.get_email(),
             usuario.get_senha(),
             tipo_map[usuario.get_tipo()],
-            usuario.unidade_id,
-            usuario.classe_atual_id,
+            usuario.get_unidade_id(),
+            usuario.get_classe_atual_id(),
             usuario.get_id()
         ))
 
         conn.commit()
         conn.close()
 
+    # ------------------ EXCLUIR ------------------
     def excluir(self, usuario_id: int):
-        conn = sqlite3.connect(self.db_name)
+        conn = self.conectar()
         cursor = conn.cursor()
 
         cursor.execute(

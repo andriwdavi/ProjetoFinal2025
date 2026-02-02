@@ -113,10 +113,12 @@ class Usuario:
         return self._unidade_id
 
     def set_unidade_id(self, unidade_id):
-        if unidade_id is None or (isinstance(unidade_id, int) and unidade_id > 0):
+        if unidade_id is None:
+            self._unidade_id = None
+        elif isinstance(unidade_id, int) and unidade_id > 0:
             self._unidade_id = unidade_id
         else:
-            raise ValueError("Unidade ID inválido")
+            raise ValueError("Unidade inválida")
 
     # ------------------ Classe Atual ------------------
     def get_classe_atual_id(self):

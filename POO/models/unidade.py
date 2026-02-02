@@ -31,7 +31,6 @@ class Unidade:
         return self._faixa_etaria
 
     def set_faixa_etaria(self, faixa_etaria):
-        # Aceita apenas 10, 11, 12, 13, 14 ou 15
         valores_permitidos = [10, 11, 12, 13, 14, 15]
         if faixa_etaria in valores_permitidos:
             self._faixa_etaria = faixa_etaria
